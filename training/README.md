@@ -14,7 +14,7 @@ Task - Manually classify product reviews into 2 classes (positive / negative).
 - Execute `review_classifier` given the ASIN file as an argument classifying
   each review as **p**ositive or **n**egative.
 
-      ./review_classifier apn.txt
+      ./review_classifier asins_in.txt
 
 - Final data is in [`data.txt`](data.txt).
 
