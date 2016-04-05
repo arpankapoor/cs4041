@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+from collections import defaultdict
+from cs4041.review import read_reviews, write_reviews
+from cs4041.stopwords import read_stopwords, rm_stopwords
+import sys
+
+NEW_DATA_FNAME = "data/processed_data.txt"
+STOPWORDS_FNAME = "data/stopwords.txt"
+
+
+def main():
+    if len(sys.argv) < 2:
+        print('usage: {} datafile'.format(sys.argv[0]), file=sys.stderr)
+        sys.exit(1)
+
+    cleaned_reviews = defaultdict(list)
+    reviews = read_reviews(sys.argv[1])
+    stopwords = read_stopwords(STOPWORDS_FNAME)
+
+    for class_, review_list in reviews.items():
+        cleaned_reviews[class_] = rm_stopwords(review_list, stopwords)
+
+    write_reviews(cleaned_reviews, NEW_DATA_FNAME)
+
+
+if __name__ == '__main__':
+    main()

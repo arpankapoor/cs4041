@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+from cs4041.review import read_reviews
+from cs4041.stopwords import read_stopwords
+from cs4041.train import train, write_trained_model
+import sys
+
+MODEL_FNAME = "data/model.p"
+STOPWORDS_FNAME = "data/stopwords.txt"
+
+
+def main():
+    if len(sys.argv) < 2:
+        print('usage: {} datafile'.format(sys.argv[0]),
+              file=sys.stderr)
+        sys.exit(1)
+
+    reviews = read_reviews(sys.argv[1])
+    stopwords = read_stopwords(STOPWORDS_FNAME)
+
+    model = train(reviews, stopwords, min_occur=2)
+    write_trained_model(model, MODEL_FNAME)
+
+
+if __name__ == '__main__':
+    main()

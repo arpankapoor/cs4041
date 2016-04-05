@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+from collections import defaultdict
+import random
+import sys
+from cs4041.review import get_amazon_reviews, write_reviews
+
+REVIEW_CLASSES = ['-', '+']
+REVIEWS_FNAME = "data/data.txt"
+REVIEWS_PER_ITEM = 100
+
+
+def main():
+    if len(sys.argv) < 2:
+        print('usage: {} asinfile'.format(sys.argv[0]), file=sys.stderr)
+        sys.exit(1)
+
+    with open(sys.argv[1]) as f:
+        asin_tld_list = [line.strip().split() for line in f]
+
+    reviews = defaultdict(list)
+
+    for asin, tld in asin_tld_list:
+        curr_reviews = defaultdict(list)
+        curr_limit = REVIEWS_PER_ITEM/2
+        for class_ in REVIEW_CLASSES:
+            review_list = get_amazon_reviews(asin, tld, class_=class_,
+                                             limit=curr_limit)
+            curr_limit = len(review_list)
+            curr_reviews[class_].extend(review_list)
+
+        min_reviews = min(len(curr_reviews['+']), len(curr_reviews['-']))
+
+        for class_, review_list in curr_reviews.items():
+            random.shuffle(review_list)
+            reviews[class_].extend(review_list[:min_reviews])
+
+    write_reviews(reviews, REVIEWS_FNAME)
+
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,25 @@
+#!/usr/bin/env python3
+from cs4041.review import read_reviews
+from cs4041.stopwords import read_stopwords
+from cs4041.evaluate import evaluate
+import sys
+
+STOPWORDS_FNAME = "data/stopwords.txt"
+
+
+def main():
+    if len(sys.argv) < 2:
+        print('usage: {} datafile'.format(sys.argv[0]),
+              file=sys.stderr)
+        sys.exit(1)
+
+    reviews = read_reviews(sys.argv[1])
+    stopwords = read_stopwords(STOPWORDS_FNAME)
+
+    accuracies = evaluate(reviews, stopwords, min_occur=2, no_of_parts=10)
+    print("Accuracies: {}".format(accuracies))
+    print("Average accuracy: {}".format(sum(accuracies)/len(accuracies)))
+
+
+if __name__ == '__main__':
+    main()
