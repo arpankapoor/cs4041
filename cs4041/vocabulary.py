@@ -13,13 +13,9 @@ def get_word_frequencies(strings):
             - key: word
             - value: frequency of the word in the given list of strings
     """
-    counter = Counter()
+    joined_string = ' '.join(string for string in strings)
 
-    for string in strings:
-        words = string.split()
-        counter = counter + Counter(words)
-
-    return counter
+    return Counter(joined_string.split())
 
 
 def get_vocabulary_from_word_frequencies(counters, min_occur=1):
