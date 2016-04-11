@@ -6,7 +6,7 @@ from cs4041.review import get_amazon_reviews, write_reviews
 
 REVIEW_CLASSES = ['-', '+']
 REVIEWS_FNAME = "data/data.txt"
-REVIEWS_PER_ITEM = 100
+REVIEWS_PER_ITEM = 1000
 
 
 def main():

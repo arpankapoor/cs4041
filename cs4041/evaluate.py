@@ -2,7 +2,7 @@ from collections import defaultdict
 import math
 import random
 from .classify import calculate_accuracy
-from .train import train
+from .train import train, train_with_bigram_features
 
 
 def join_reviews(parts):
@@ -109,6 +109,43 @@ def evaluate(reviews, stopwords, min_occur=2, no_of_parts=10):
         ])
 
         trained_model = train(joined_part, stopwords, min_occur)
+
+        accuracies[i] = calculate_accuracy(parts[i], stopwords, trained_model)
+
+    return accuracies
+
+
+def evaluate_with_bigram_features(reviews, stopwords,
+                                  min_occur=2, no_of_parts=10):
+    """
+    Similar to the above function except that this function also takes into
+    account some bigram features.
+
+    Args:
+        reviews: dictionary with
+                 - key: class
+                 - value: list of reviews belonging to this class.
+        stopwords: list of words to remove from all documents.
+        min_occur: minimum number of occurrences of a word/bigram for it to be
+                   included in the vocabulary.
+        no_of_parts: number of parts to divide into.
+
+    Returns:
+        List of accuracies of all models trained.
+    """
+    parts = split_reviews(reviews, no_of_parts)
+
+    # Accuracy of each model
+    accuracies = [0] * no_of_parts
+
+    # Train with all parts except i and classify the reviews in part i
+    for i in range(no_of_parts):
+        joined_part = join_reviews([
+            parts[j] for j in range(no_of_parts) if j != i
+        ])
+
+        trained_model = train_with_bigram_features(joined_part, stopwords,
+                                                   min_occur)
 
         accuracies[i] = calculate_accuracy(parts[i], stopwords, trained_model)
 

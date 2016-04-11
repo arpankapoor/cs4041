@@ -1,5 +1,4 @@
 from .stopwords import rm_stopwords
-from .vocabulary import get_vocabulary
 
 
 def calculate_cond_probability(review_text, class_, trained_model):
@@ -17,22 +16,37 @@ def calculate_cond_probability(review_text, class_, trained_model):
             1. class probabilities: a dictionary with
                                     - key: class
                                     - value: log probability of that class
-            2. word likelihoods: a dictionary with
-                                 - key: tuple (word, class)
-                                 - value: log(likelihood of word given class)
+            2. likelihoods: a dictionary with
+                            - key: tuple (word/bigram, class)
+                            - value: log(likelihood of word/bigram given class)
 
     Return:
         Log((probability of class given review) * (probability of review))
     """
     class_probability = trained_model[0]
-    word_likelihood = trained_model[1]
+    likelihood = trained_model[1]
 
     ans = class_probability[class_]
-    words = get_vocabulary([review_text], min_occur=1)
+    words = review_text.split()
+    no_of_words = len(words)
 
-    for word in words:
-        ans = ans + word_likelihood.get((word, class_),
-                                        word_likelihood[('<UNKNOWN>', class_)])
+    idx = 0
+    while idx < no_of_words:
+        curr_bigram = None
+        if idx < no_of_words-1:
+            curr_bigram = ' '.join([words[idx], words[idx+1]])
+
+        # Add bigram probability OR word probability OR unknown probability
+        # in that order
+        if curr_bigram is not None and (curr_bigram, class_) in likelihood:
+            ans = ans + likelihood[(curr_bigram, class_)]
+            idx = idx + 2
+        else:
+            if (words[idx], class_) in likelihood:
+                ans = ans + likelihood[(words[idx], class_)]
+            else:
+                ans = ans + likelihood[('<UNKNOWN>', class_)]
+            idx = idx + 1
 
     return ans
 
@@ -48,9 +62,9 @@ def classify_review(review_text, stopwords, trained_model):
             1. class probabilities: a dictionary with
                                     - key: class
                                     - value: log probability of that class
-            2. word likelihoods: a dictionary with
-                                 - key: tuple (word, class)
-                                 - value: log(likelihood of word given class)
+            2. likelihoods: a dictionary with
+                            - key: tuple (word/bigram, class)
+                            - value: log(likelihood of word/bigram given class)
 
     Return:
         '+' or '-'
@@ -95,9 +109,9 @@ def calculate_accuracy(reviews, stopwords, trained_model):
             1. class probabilities: a dictionary with
                                     - key: class
                                     - value: log probability of that class
-            2. word likelihoods: a dictionary with
-                                 - key: tuple (word, class)
-                                 - value: log(likelihood of word given class)
+            2. likelihoods: a dictionary with
+                            - key: tuple (word/bigram, class)
+                            - value: log(likelihood of word/bigram given class)
 
     Return:
         Accuracy of the model in classifying given reviews.

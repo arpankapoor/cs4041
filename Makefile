@@ -7,13 +7,16 @@ run: data/data.txt
 	@./stage4 data/processed_data.txt
 	@echo "Performing 10-fold cross validation..."
 	@./stage5 data/processed_data.txt
+	@echo "Creating vocabulary with bigram features..."
+	@./stage6 data/processed_data.txt
+	@echo "Training with bigram features and performing 10-fold cross validation..."
+	@./stage7 data/processed_data.txt
 
 data/data.txt:
 	@echo "Collecting reviews..."
 	@./stage1 data/asins.txt
 	@echo "Removing duplicates from the data set..."
-	@sort data/data.txt | uniq | shuf > data/tmp
-	@mv data/tmp > data/data.txt
+	@sort -uR data/data.txt -o data/data.txt
 
 clean:
 	$(RM) data/data.txt

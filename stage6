@@ -2,11 +2,11 @@
 from collections import Counter, defaultdict
 import sys
 from cs4041.review import read_reviews
-from cs4041.vocabulary import (get_word_frequencies,
+from cs4041.vocabulary import (get_combined_frequencies,
                                get_vocabulary_from_frequencies,
                                write_vocabulary)
 
-VOCABULARY_FNAME = "data/vocabulary.txt"
+VOCABULARY_FNAME = "data/bigram_vocabulary.txt"
 
 
 def main():
@@ -15,16 +15,16 @@ def main():
               file=sys.stderr)
         sys.exit(1)
 
-    word_frequency = defaultdict(Counter)
+    frequency = defaultdict(Counter)
 
     cleaned_reviews = read_reviews(sys.argv[1])
 
     for class_, review_list in cleaned_reviews.items():
-        word_frequency[class_] = get_word_frequencies(review_list)
+        frequency[class_] = get_combined_frequencies(review_list)
 
     vocabulary = get_vocabulary_from_frequencies(
-        [word_frequency[class_] for class_ in cleaned_reviews.keys()],
-        min_occur=2)
+        [frequency[class_] for class_ in cleaned_reviews.keys()],
+        min_occur=3)
 
     write_vocabulary(vocabulary, VOCABULARY_FNAME)
 
