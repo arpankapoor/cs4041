@@ -2,7 +2,9 @@
 
 A toy multinomial naive Bayes classifier for e-commerce review classification.
 
-**Accuracy for Part A 10-fold evaluation : 75.04407672385167%**
+**Accuracy for Part A 10-fold evaluation : 78.21688637700094%**
+
+**Accuracy for Part B 10-fold evaluation : 79.5364463147196%**
 
 ## Dependencies
 
