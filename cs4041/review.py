@@ -5,7 +5,7 @@ import requests
 import urllib.parse
 
 
-def get_amazon_reviews(asin, tld, class_=None, limit=10, char_limit=10000):
+def get_amazon_reviews(asin, tld, class_=None, limit=10):
     """
     Fetch customer reviews for any Amazon product.
 
@@ -58,10 +58,6 @@ def get_amazon_reviews(asin, tld, class_=None, limit=10, char_limit=10000):
 
         curr_reviews = [' '.join(review.stripped_strings)
                         for review in review_soup]
-
-        # Remove very large reviews
-        curr_reviews = [review for review in curr_reviews
-                        if len(review) <= char_limit]
 
         reviews.extend(curr_reviews)
 
