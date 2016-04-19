@@ -19,7 +19,7 @@ data/data.txt:
 	@sort -uR data/data.txt -o data/data.txt
 
 clean:
-	$(RM) data/data.txt
+	$(RM) data/bigram_vocabulary.txt
 	$(RM) data/model.p
 	$(RM) data/processed_data.txt
 	$(RM) data/vocabulary.txt
