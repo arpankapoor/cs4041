@@ -6,10 +6,13 @@ run: data/data.txt
 	@echo "Training naive Bayes model..."
 	@./stage4 data/processed_data.txt
 	@echo "Performing 10-fold cross validation..."
+	@echo "------------------------------------------------------------------------"
 	@./stage5 data/processed_data.txt
+	@echo "------------------------------------------------------------------------"
 	@echo "Creating vocabulary with bigram features..."
 	@./stage6 data/processed_data.txt
 	@echo "Training with bigram features and performing 10-fold cross validation..."
+	@echo "------------------------------------------------------------------------"
 	@./stage7 data/processed_data.txt
 
 data/data.txt:
