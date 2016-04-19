@@ -85,8 +85,10 @@ def read_reviews(fname):
 
     with open(fname) as f:
         for line in f:
-            class_, review_text = line.strip().split(sep='\t', maxsplit=1)
-            reviews[class_].append(review_text)
+            line = line.strip()
+            if line:
+                class_, review_text = line.split(maxsplit=1)
+                reviews[class_].append(review_text)
 
     return reviews
 
