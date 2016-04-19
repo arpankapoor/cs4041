@@ -30,23 +30,26 @@ def calculate_cond_probability(review_text, class_, trained_model):
     words = review_text.split()
     no_of_words = len(words)
 
-    idx = 0
-    while idx < no_of_words:
+    # Was the current word included in the bigram (previous_word, curr_word)?
+    flag = False
+
+    for idx, curr_word in enumerate(words):
         curr_bigram = None
         if idx < no_of_words-1:
-            curr_bigram = ' '.join([words[idx], words[idx+1]])
+            curr_bigram = ' '.join([curr_word, words[idx+1]])
 
         # Add bigram probability OR word probability OR unknown probability
         # in that order
         if curr_bigram is not None and (curr_bigram, class_) in likelihood:
             ans = ans + likelihood[(curr_bigram, class_)]
-            idx = idx + 2
+            flag = True
         else:
-            if (words[idx], class_) in likelihood:
-                ans = ans + likelihood[(words[idx], class_)]
-            else:
-                ans = ans + likelihood[('<UNKNOWN>', class_)]
-            idx = idx + 1
+            if not flag:
+                if (curr_word, class_) in likelihood:
+                    ans = ans + likelihood[(curr_word, class_)]
+                else:
+                    ans = ans + likelihood[('<UNKNOWN>', class_)]
+            flag = False
 
     return ans
 
